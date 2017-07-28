@@ -1,21 +1,11 @@
-import_twitter_file <- function(inFile, col_types=NULL, rast=NULL, keep_UTC=FALSE) {
-  #' This function imports a single CSV of twitter data.
-  #' @param inFile Filename to import (.csv or .csv.gz).
-  #' @param col_types Passed through to read_csv. NULL imports all fields.
-  #' @param keep_UTC Flag to return UTC datetime.
-  #' @return Returns data.table.
-  #' import_twitter_file()
-  require(data.table)
-  require(raster)
-  require(readr)
-  tic <- Sys.time()
-
-  inFile <- "B:/twitter_data/usa_geo/scores/usa_geo_backup_2014-05-22_scores.csv"
-  col_types <- cols_only(tweet_datetime=col_datetime(format = ""),
-                         lng=col_double(), lat=col_double(),
-                         afinn="?", vaderPos="?", vaderNeg="?")
-  keep_UTC <- TRUE
-
+#' This function imports a single CSV of twitter data.
+#' @param inFile Filename to import (.csv or .csv.gz).
+#' @param col_types Passed through to read_csv. NULL imports all fields.
+#' @return Returns data.table.
+#' @import data.table
+#' @import readr
+#' @export
+import_twitter_file <- function(inFile, col_types=NULL) {
   if (file.exists(inFile)) {
     print(paste0("Loading ", inFile))
 
@@ -24,42 +14,33 @@ import_twitter_file <- function(inFile, col_types=NULL, rast=NULL, keep_UTC=FALS
     # Change postedTime or tweet_datetime to datetimeUTC
     if ("postedTime" %in% names(scores)) {setnames(scores, "postedTime", "datetimeUTC")}
     if ("tweet_datetime" %in% names(scores)) {setnames(scores, "tweet_datetime", "datetimeUTC")}
-
-    print(Sys.time() - tic)
     return(scores)
   }
   print(paste0(inFile, " did not exist or had no data"))
   return(NULL)
 }
 
-add_raster_data <- function(dt, rast, rast.levels=NULL) {
-  require(raster)
-  scores[, cell.rast := cellFromXY(rast, scores[, list(lng, lat)])]
+#' Gets local time for a data.table with lat, lng, datetimeUTC
+#' @param dt data.table to import, must have following cols (at minimum): lng, lat, tweet_datetime.
+#' @param debug Flag to also return raster cell, value, and TZID.
+#' #' @return Returns data.table.
+#' @import data.table
+#' @importFrom raster cellFromXY getValues
+#' @export
+get_local_time <- function(dt, debug=FALSE) {
+  # tz.rast is silently loaded from sysdata.rda
+  dt[, rast.cell := cellFromXY(tz.rast, dt[, list(lng, lat)])]
+  dt[, rast.value := getValues(tz.rast)[rast.cell]]
+  
+  dt[, TZID := tz.rast@data@attributes[[1]]$category[match(rast.value, tz.rast@data@attributes[[1]]$ID)]]
 
-  scores[, rast.value:=getValues(rast)[cell.rast]]
-
-  # Replace numeric with levels
-  if (!is.null(rast.levels)) {
-    scores[, rast.value2:=rast.levels[rast.value]]
-    scores[, rast.value:=NULL]
-    setnames(scores, "rast.value2", "rast.value")
+  dt[!is.na(TZID), `:=`(date=as.IDate(datetimeUTC, tz=TZID),
+                        time=as.ITime(datetimeUTC, tz=TZID)), 
+     by=list(TZID=as.character(TZID))] 
+  
+  if(debug == TRUE) {
+    dt[, `:=`(rast.cell=NULL, rast.value=NULL, TZID=NULL)] # clean up
   }
-
-}
-
-get_local_time <- function(dt) {
-  # dt with following cols (at minimum): lng, lat, tweet_datetime
-  # return same dt plus cell plus local date and time
-  require(fasterize)
-  require(sf)
-  require(raster)
-  MODIS.rast <- raster(MODIS.file) # Is there a reliable way to include data in packages?
-  tz.shp <-
-  tz.rast <- fasterize(MODIS.rast, tz.shp)
-  rast.fact <- levels(tz.rast)
-  add_raster_data(dt, tz.rast, rast.levels)
-
-
-  scores[, `:=`(date=as.IDate(datetimeUTC, tz=TZID)), by=TZID] # Get local date (could get time but aggregating anyway)
-
+  
+  return(dt) # Good practice, not necessary
 }
