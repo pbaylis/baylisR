@@ -74,6 +74,7 @@ felm_to_dt <- function(felm.est, keepvars=NULL) {
 #' Get varname, min, max from named range. Not exported
 #' @param x Character vector.
 #' @return Named list with varname, xmin, xmax
+#' @import stringr
 extract_from_range <- function(x) {
   match.res <- str_match(x, "([^\\(\\[]*)[\\(\\[]([-Inf0-9 ]+),([-Inf0-9 ]+)[\\)\\]]")
 
