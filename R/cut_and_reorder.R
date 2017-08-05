@@ -5,7 +5,6 @@
 #' @return Factorized version of x, with given sequence and omitted level first.
 #' @export
 cut_and_reorder  <- function(x, cut.seq=c(-Inf, seq(0, 40, 5), Inf), omit=22.5) {
-  # Convenience function to cut and reorder a variable quickly
   x.cut <- cut(x, cut.seq)
   x.cut <- relevel(x.cut, findInterval(omit, cut.seq))
   return(x.cut)
