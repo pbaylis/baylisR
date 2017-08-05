@@ -6,6 +6,8 @@ setwd("B:/github/baylisR")
 # create("baylisR")
 document()
 install(".")
+install_github("pbaylis/baylisR", auth_token="ebb64529e5a9127f17624c261dbd727b4ab7c9e6")
+
 
 # rasterize tz.shp
 library(raster)
@@ -51,4 +53,3 @@ dt <- import_twitter_file(inFile="B:/twitter_data/usa_geo/scores/usa_geo_backup_
                                                 afinn="?", vaderPos="?", vaderNeg="?"))
 
 get_local_time(dt, debug=T)
-
