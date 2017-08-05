@@ -13,7 +13,7 @@ clean_binned_results <- function(felm.est=NULL, felm.dt=NULL, keepvars=NULL) {
   }
 
   # Clean and order coefficient data.tables
-  dt[, c("varname", "xmin", "xmax"):= extract.from.range(dt$varname.full)]
+  dt[, c("varname", "xmin", "xmax"):= extract_from_range(dt$varname.full)]
 
   # Create midpoint and "fake" xmin and xmax for plotting
   gaps <- dt$xmax-dt$xmin
@@ -69,4 +69,16 @@ felm_to_dt <- function(felm.est, keepvars=NULL) {
     dt <- dt[grep(keepvars, varname.full)]
   }
   return(dt)
+}
+
+#' Get varname, min, max from named range. Not exported
+#' @param x Character vector.
+#' @return Named list with varname, xmin, xmax
+extract_from_range <- function(x) {
+  match.res <- str_match(x, "([^\\(\\[]*)[\\(\\[]([-Inf0-9 ]+),([-Inf0-9 ]+)[\\)\\]]")
+
+  # We'll be adding to existing data table
+  return(list(varname=match.res[, 2],
+              xmin=as.numeric(match.res[, 3]),
+              xmax=as.numeric(match.res[, 4])))
 }
