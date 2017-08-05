@@ -7,7 +7,7 @@
 #' @export
 clean_binned_results <- function(felm.est=NULL, felm.dt=NULL, keepvars=NULL) {
   if (!is.null(felm.est)) {
-    dt <- felm.to.dt(felm.est, keepvars=keepvars)
+    dt <- felm_to_dt(felm.est, keepvars=keepvars)
   } else if (is.null(felm.dt)) {
     stop("Requires felm.est or felm.dt")
   }
@@ -55,4 +55,18 @@ clean_binned_results <- function(felm.est=NULL, felm.dt=NULL, keepvars=NULL) {
 find_missing <- function(x, gap) {
   full <- seq(min(x), max(x), gap)
   missing <- full[!full %in% x]
+}
+
+#' # Convert felm to data.table. Not exported for now.
+#' @param felm.est felm object.
+#' @param keepvars regex of variables to keep.
+#' @return data.table of results
+#' @import data.table
+felm_to_dt <- function(felm.est, keepvars=NULL) {
+  dt <- as.data.table(summary(felm.est)$coefficients[, 1:2], keep.rownames=T)
+  setnames(dt, c("varname.full", "coef", "se"))
+  if (!is.null(keepvars)) {
+    dt <- dt[grep(keepvars, varname.full)]
+  }
+  return(dt)
 }
