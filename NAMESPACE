@@ -2,6 +2,8 @@
 
 export(get_local_time)
 export(import_twitter_file)
+export(pastep)
+export(strip_felm)
 import(data.table)
 import(readr)
 importFrom(raster,cellFromXY)
