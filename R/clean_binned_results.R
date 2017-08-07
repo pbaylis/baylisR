@@ -4,16 +4,19 @@
 #' @param keepvars (Optional) regex of variables to keep.
 #' @return Ordered data.table with coef, se, ci.l, ci.h, xmin, xmax, xmid. Will include a row for the (guessed at) omitted variable with coef and se = 0.
 #' @import data.table
+#' @import lfe
 #' @export
 clean_binned_results <- function(felm.est=NULL, felm.dt=NULL, keepvars=NULL) {
   if (!is.null(felm.est)) {
     dt <- felm_to_dt(felm.est, keepvars=keepvars)
-  } else if (is.null(felm.dt)) {
-    stop("Requires felm.est or felm.dt")
+  } else if (!is.null(felm.dt)) {
+    dt <- felm.dt
+  } else {
+    stop("Requires felm.est or felm.dt.")
   }
 
   # Clean and order coefficient data.tables
-  dt[, c("varname", "xmin", "xmax"):= extract_from_range(dt$varname.full)]
+  dt[, c("varname", "xmin", "xmax"):=extract_from_range(dt$varname.full)]
 
   # Create midpoint and "fake" xmin and xmax for plotting
   gaps <- dt$xmax-dt$xmin
