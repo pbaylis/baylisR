@@ -2,7 +2,7 @@
 % Please edit documentation in R/prism_daily_to_ym.R
 \name{prism_daily_to_ym}
 \alias{prism_daily_to_ym}
-\title{Clean binned results from felm (and maybe lm?). Will try to guess at omitted variable from variable names created using cut().}
+\title{Takes in a data.table with daily weather data and produces aggregated data.table by month of sample using requested summary functions.}
 \usage{
 prism_daily_to_ym(dt, i.names, t.name = c("date"), mean.names = c("tmin"),
   sum.names = c("ppt"), bins.seqs = list(tmax = c(-Inf, seq(0, 40, 10),
@@ -25,5 +25,5 @@ prism_daily_to_ym(dt, i.names, t.name = c("date"), mean.names = c("tmin"),
 Monthly summary of variables from PRISM.
 }
 \description{
-Clean binned results from felm (and maybe lm?). Will try to guess at omitted variable from variable names created using cut().
+Takes in a data.table with daily weather data and produces aggregated data.table by month of sample using requested summary functions.
 }

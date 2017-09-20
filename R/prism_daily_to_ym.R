@@ -1,4 +1,4 @@
-#' Clean binned results from felm (and maybe lm?). Will try to guess at omitted variable from variable names created using cut().
+#' Takes in a data.table with daily weather data and produces aggregated data.table by month of sample using requested summary functions.
 #' @param dt data.table to summarize.
 #' @param i.names Character vector of variables in dt.file that identify 
 #' @param t.name Character vector of length 1 that identifies date variable.
@@ -9,7 +9,6 @@
 #' @import data.table
 #' @import zoo
 #' @export
-# Takes in a data.table with daily weather data and produces aggregated data.table by month of sample using requested summary functions.
 prism_daily_to_ym <- function(dt, 
                          i.names, 
                          t.name=c("date"), 
