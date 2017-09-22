@@ -1,28 +1,30 @@
-#' Clean up stargazer output
-#' @param stargazer.out Output from stargazer
-#' @param replace.stars.with.sym Boolean to replace stars with sym command.
-#' @return Cleaned-up table output.
+#' Calls stargazer, returns cleaned up stargazer output. Sets a few other defaults.
+#' @param ... Parameters for stargazer
+#' @return Character vector of cleaned-up table output. 
+#' @import stargazer
 #' @export
-stargazer_clean <- function(stargazer.out, replace.stars.with.sym=F) {  # Just get the stuff inside tabular environment from stargazer
-  # Trim to just the table
-  first.line <- grep("begin\\{tabular\\}", stargazer.out) + 1
-  last.line <- grep("end\\{tabular\\}", stargazer.out) - 1
+stargazerw <- function(..., align=T, table.layout="c-t", no.space=T, style="aer", fragment=F) {
+  stargazer.raw <- stargazer(..., align=align, table.layout=table.layout, no.space=no.space, style=style)
+  
+  stargazer.out <- stargazer.raw
+  
+  offset <- as.numeric(fragment) # If fragment is true, tabular row will get dropped
+  first.line <- grep("begin{tabular}", stargazer.out, fixed=T) + offset
+  last.line <- grep("end{tabular}", stargazer.out, fixed=T) - offset
   stargazer.out <- stargazer.out[first.line:last.line]
-  # Remove \\hline rows
-  hline.rows <- grep("\\hline", stargazer.out)
-  if (length(hline.rows) > 0) {
-    stargazer.out <- stargazer.out[-hline.rows]
-  }
-  # Make all multicolumns align left (should be variable names)
-  stargazer.out <- gsub("multicolumn\\{1\\}\\{c\\}", "multicolumn\\{1\\}\\{l\\}", stargazer.out)
   
-  # Switch to sym for estauto
-  if (replace.stars.with.sym) {
-    stargazer.out <- gsub("\\^\\{", "\\\\sym\\{", stargazer.out)
+  # Replace \hline with \midrule
+  stargazer.out <- gsub("\\hline", "\\midrule", stargazer.out, fixed=T)
+  
+  # Insert \toprule and \bottomrule if this isn't a fragment
+  if (fragment == FALSE ) {
+    stargazer.out <- c(stargazer.out[-length(stargazer.out)], "\\bottomrule", stargazer.out[length(stargazer.out)])
+    stargazer.out <- c(stargazer.out[1], "\\toprule", stargazer.out[-1])
   }
   
-  # Sometimes there are rows that are like " & & & ... & \\\\" - drop them
-  stargazer.out <- stargazer.out[sapply(strsplit(stargazer.out, ""), function(x) !all(unique(x) %in% c(" ", "&", "\\")))]
+  # Remove \\\\[-1.8ex]
+  stargazer.out <- gsub("\\\\[-1.8ex]", "", stargazer.out, fixed=T)
+  
   return(stargazer.out)
 }
 
