@@ -5,7 +5,7 @@
 \title{Calls stargazer, returns cleaned up stargazer output. Sets a few other defaults.}
 \usage{
 stargazerw(..., align = T, table.layout = "c-t", no.space = T,
-  style = "aer", fragment = F)
+  style = "aer", fragment = F, drop.hline = F)
 }
 \arguments{
 \item{...}{Parameters for stargazer}

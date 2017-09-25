@@ -3,7 +3,7 @@
 #' @return Character vector of cleaned-up table output. 
 #' @import stargazer
 #' @export
-stargazerw <- function(..., align=T, table.layout="c-t", no.space=T, style="aer", fragment=F) {
+stargazerw <- function(..., align=T, table.layout="c-t", no.space=T, style="aer", fragment=F, drop.hline=F) {
   stargazer.raw <- stargazer(..., align=align, table.layout=table.layout, no.space=no.space, style=style)
   
   stargazer.out <- stargazer.raw
@@ -13,9 +13,16 @@ stargazerw <- function(..., align=T, table.layout="c-t", no.space=T, style="aer"
   last.line <- grep("end{tabular}", stargazer.out, fixed=T) - offset
   stargazer.out <- stargazer.out[first.line:last.line]
   
-  # Replace \hline with \midrule
-  stargazer.out <- gsub("\\hline", "\\midrule", stargazer.out, fixed=T)
-  
+  # Replace \hline with \midrule if not dropping
+  if (drop.hline == FALSE) {
+    stargazer.out <- gsub("\\hline", "\\midrule", stargazer.out, fixed=T)
+  } else {
+    hline.rows <- grep("\\hline", stargazer.out, fixed=T)
+    if (length(hline.rows) > 0) {
+      stargazer.out <- stargazer.out[-hline.rows]
+    }
+  }
+
   # Insert \toprule and \bottomrule if this isn't a fragment
   if (fragment == FALSE ) {
     stargazer.out <- c(stargazer.out[-length(stargazer.out)], "\\bottomrule", stargazer.out[length(stargazer.out)])
