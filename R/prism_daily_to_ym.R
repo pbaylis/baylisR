@@ -51,7 +51,7 @@ prism_daily_to_ym <- function(dt,
   for (bins.name in names(bins.seqs)) {
     # bins.name <- "tmax"
     dt[, temp.cut:=cut(get(bins.name), bins.seqs[[bins.name]])]
-    bins <- dt[, .N, by=list(i, ym, temp.cut)]
+    bins <- dt[!(is.na(temp.cut)), .N, by=list(i, ym, temp.cut)]
     bins[, temp.cut:=paste0(bins.name, "_", temp.cut)]
     bins.wide <- dcast(bins, i + ym ~ temp.cut, value.var="N", fill=0) # Reshape wide
     bin.col.names <- paste0(bins.name, "_", levels(dt$temp.cut))
