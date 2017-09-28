@@ -2,6 +2,7 @@
 
 export(add_lags_and_leads)
 export(clean_binned_results)
+export(construct_formula)
 export(cut_and_reorder)
 export(fC)
 export(get_local_time)
