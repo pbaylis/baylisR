@@ -4,7 +4,7 @@
 \alias{add_lags_and_leads}
 \title{Return data.table with lag}
 \usage{
-add_lags_and_leads(dt, varnames, tvar = "date", by = NULL,
+add_lags_and_leads(dt, varnames, tvar = "date", by = NULL, n = 3,
   typenames = c("lag", "lead"))
 }
 \arguments{
@@ -14,7 +14,9 @@ add_lags_and_leads(dt, varnames, tvar = "date", by = NULL,
 
 \item{tvar}{Name of time variable. Default is "date".}
 
-\item{by}{(Optional) Name of variable to run lag/lead by}
+\item{by}{(Optional) Name of variable to run lags/leads by}
+
+\item{n}{(Optional) Number of lags/leads to create}
 
 \item{typenames}{(Optional) Character vector equal to c("lag"), c("lead")", or c("lag", "lead") (default)}
 }
