@@ -11,7 +11,7 @@
 #' @import data.table
 #' @import zoo
 #' @export
-prism_aggregate <- function(dt, 
+aggregate_prism <- function(dt, 
                               i.names, 
                               t.in=c("date"), 
                               t.fun=as.yearmon,
@@ -21,14 +21,14 @@ prism_aggregate <- function(dt,
                                              tmin=c(-Inf, seq(-10,30,10), Inf))) {
   
   ### TESTING: DAILY TO YM- 
-  dt <- readRDS("B:/Dropbox/01_Work/01_Current/99_Common/prism_code/prism_areacode_2002.Rds")
-  i.names=c("NPA")
-  t.in <- c("date")
-  t.fun <- list(ym=as.yearmon)
-  bins.seqs = list(tmax=c(-Inf, seq(-10, 60, 5), Inf))
-  mean.names=c("ppt")
-  sum.names=c("tmin", "tmax")
-  ### END TESTING
+  # dt <- readRDS("B:/Dropbox/01_Work/01_Current/99_Common/prism_code/prism_areacode_2002.Rds")
+  # i.names=c("NPA")
+  # t.in <- c("date")
+  # t.fun <- list(ym=as.yearmon)
+  # bins.seqs = list(tmax=c(-Inf, seq(-10, 60, 5), Inf))
+  # mean.names=c("ppt")
+  # sum.names=c("tmin", "tmax")
+  # ### END TESTING
   
   ### TESTING: YM TO DECADAL
   # dt <- weather
