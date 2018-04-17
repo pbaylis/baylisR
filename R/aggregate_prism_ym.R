@@ -1,13 +1,14 @@
-# NEARLY READy! NEED TO DOCUMENT, IMPORT ZOO, CLEAN UP CODE TO REMOVE UNNECESSARY COMMENTS. POST BEACH.
-
-
-#' Reorder a variable quickly for a regression.
-#' @param x Numeric vector.
-#' @param cut.seq (Optional) Numeric vector to pass to cut
-#' @param omit (Optional) Bin with this number will be placed first in vector.
-#' @return Factorized version of x, with given sequence and omitted level first.
+#' Aggregate PRISM file by ym
+#' @param dt.file filename of .Rds with data.table
+#' @param i.names Name(s) of ID variable
+#' @param t.name Name of time variable 
+#' @param bincount.seqs Named list of sequences for cut variables. Name should be the relevant variable name.
+#' @param mean.names Character vector of names of variables to take means over
+#' @param sum.names Character vector of names of variables to take sums over
+#' @return data.table of aggregated data
+#' @import data.table
+#' @import zoo
 #' @export
-# Function takes in a data.table filename and produces a monthly summary
 aggregate_prism_ym <- function(dt.file, i.names, t.name, bincount.seqs=NULL, mean.names=NULL, sum.names=NULL) {
   # DEBUG
   #dt.file<-"E:/prism/data/areacode_popweighted_final/prism_areacode_2002.Rds"; i.names <- c("NPA"); t.name <- c("date");
@@ -29,7 +30,7 @@ aggregate_prism_ym <- function(dt.file, i.names, t.name, bincount.seqs=NULL, mea
     dt[, temp.cut:=cut(get(bincount.name), bincount.seqs[[bincount.name]], ordered_result=TRUE)]
     bins <- dt[, .N, by=list(i, ym, temp.cut)]
     bins[, bin.order:=as.numeric(temp.cut)]
-    max.width <- ceiling(log10(max(bins$bin.order)))
+    max.width <- ceiling(log10(max(bins$bin.order, na.rm = T)))
     bins[, bin.order:=formatC(bin.order, width=max.width, format="d", flag="0")] # Prepend 0s
     bins[, temp.cut:=paste0(bincount.name, "_bin",bin.order,"_", temp.cut)]
     # Reshape wide

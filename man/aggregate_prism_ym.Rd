@@ -2,21 +2,27 @@
 % Please edit documentation in R/aggregate_prism_ym.R
 \name{aggregate_prism_ym}
 \alias{aggregate_prism_ym}
-\title{Reorder a variable quickly for a regression.}
+\title{Aggregate PRISM file by ym}
 \usage{
 aggregate_prism_ym(dt.file, i.names, t.name, bincount.seqs = NULL,
   mean.names = NULL, sum.names = NULL)
 }
 \arguments{
-\item{x}{Numeric vector.}
+\item{dt.file}{filename of .Rds with data.table}
 
-\item{cut.seq}{(Optional) Numeric vector to pass to cut}
+\item{i.names}{Name(s) of ID variable}
 
-\item{omit}{(Optional) Bin with this number will be placed first in vector.}
+\item{t.name}{Name of time variable}
+
+\item{bincount.seqs}{Named list of sequences for cut variables. Name should be the relevant variable name.}
+
+\item{mean.names}{Character vector of names of variables to take means over}
+
+\item{sum.names}{Character vector of names of variables to take sums over}
 }
 \value{
-Factorized version of x, with given sequence and omitted level first.
+data.table of aggregated data
 }
 \description{
-Reorder a variable quickly for a regression.
+Aggregate PRISM file by ym
 }
