@@ -16,7 +16,7 @@ strip_felm <- function(felm.est) {
   felm.est$X <- NULL
   felm.est$cX <- NULL
   felm.est$cY <- NULL
-  felm.est$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL)
+  # felm.est$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) # Removed because it caused issues
   # IV only
   felm.est$c.response <- NULL
   felm.est$iv.residuals <- NULL
@@ -34,7 +34,7 @@ strip_felm <- function(felm.est) {
   felm.est$stage1$ivx <- NULL
   felm.est$stage1$ivy <- NULL
   felm.est$stage1$r.residuals <- NULL
-  felm.est$stage1$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL)
+  # felm.est$stage1$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) # REmoved because it caused errors
   felm.est$stage1$centred.exo <- NULL
   return(felm.est)
 }
