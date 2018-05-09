@@ -5,9 +5,10 @@
 \title{Generalized version of PRISM_ym
 Takes in a data.table with daily weather data and produces aggregated data.table by month of sample using requested summary functions.}
 \usage{
-aggregate_prism(dt, i.names, t.in = c("date"), t.fun = as.yearmon,
-  mean.names = c("tmin"), sum.names = c("ppt"), bins.seqs = list(tmax =
-  c(-Inf, seq(0, 40, 10), Inf), tmin = c(-Inf, seq(-10, 30, 10), Inf)))
+aggregate_prism(dt, i.names, t.in = c("date"), t.fun = list(ym =
+  as.yearmon), mean.names = c("tmin"), sum.names = c("ppt"),
+  bins.seqs = list(tmax = c(-Inf, seq(0, 40, 10), Inf), tmin = c(-Inf,
+  seq(-10, 30, 10), Inf)))
 }
 \arguments{
 \item{dt}{data.table to summarize.}
