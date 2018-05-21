@@ -1,6 +1,6 @@
 #' Strip off data-intensive felm objects.
 #' @param felm.est Object from lfe::felm call
-#' @return Returns (much smaller) lfe::felm object. 
+#' @return Returns (much smaller) lfe::felm object.
 #' @export
 strip_felm <- function(felm.est) {
   # Strip out all of the fatty bits from felm to save it.
@@ -16,7 +16,7 @@ strip_felm <- function(felm.est) {
   felm.est$X <- NULL
   felm.est$cX <- NULL
   felm.est$cY <- NULL
-  # felm.est$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) # Removed because it caused issues
+  # felm.est$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) # Commented bc I think we need this
   # IV only
   felm.est$c.response <- NULL
   felm.est$iv.residuals <- NULL
@@ -34,7 +34,13 @@ strip_felm <- function(felm.est) {
   felm.est$stage1$ivx <- NULL
   felm.est$stage1$ivy <- NULL
   felm.est$stage1$r.residuals <- NULL
-  # felm.est$stage1$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) # REmoved because it caused errors
+  # felm.est$stage1$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) ## Commented bc I think we need this
   felm.est$stage1$centred.exo <- NULL
+
+  # Remove environment variables from terms object (occasionally blows up on-disk size)
+  attr(felm.est$terms, ".Environment") <- NULL
+
   return(felm.est)
 }
+
+
