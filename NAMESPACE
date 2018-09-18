@@ -3,6 +3,7 @@
 export(add_lags_and_leads)
 export(aggregate_prism)
 export(aggregate_prism_ym)
+export(bound_var)
 export(clean_binned_results)
 export(construct_formula)
 export(cut_and_reorder)
