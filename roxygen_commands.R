@@ -1,9 +1,8 @@
+# Not sure If I need any of this - can maybe just run "Clean and rebuild from Build"
+
 library(devtools)
 library(roxygen2)
 
-# setwd("B:/github/baylisR")
-setwd("~/github/baylisR")
-# create("baylisR")
 document()
 install(".")
 

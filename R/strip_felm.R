@@ -16,12 +16,11 @@ strip_felm <- function(felm.est) {
   felm.est$X <- NULL
   felm.est$cX <- NULL
   felm.est$cY <- NULL
-  # felm.est$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) # Commented bc I think we need this
-  # IV only
   felm.est$c.response <- NULL
   felm.est$iv.residuals <- NULL
   felm.est$r.iv.residuals <- NULL
   felm.est$r.iv.response <- NULL
+  felm.est$model <- NULL # This is a big one: seems to store a bunch of environment stuff that _doesn't_ get counted as part of the object
   felm.est$stage1$residuals <- NULL
   felm.est$stage1$response <- NULL
   felm.est$stage1$fitted.values <- NULL
@@ -34,12 +33,8 @@ strip_felm <- function(felm.est) {
   felm.est$stage1$ivx <- NULL
   felm.est$stage1$ivy <- NULL
   felm.est$stage1$r.residuals <- NULL
-  # felm.est$stage1$clustervar <- sapply(felm.est$clustervar, function(x) x <- NULL) ## Commented bc I think we need this
   felm.est$stage1$centred.exo <- NULL
-
-  # Remove environment variables from terms object (occasionally blows up on-disk size)
   attr(felm.est$terms, ".Environment") <- NULL
-
   return(felm.est)
 }
 

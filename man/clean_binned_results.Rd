@@ -4,7 +4,8 @@
 \alias{clean_binned_results}
 \title{Clean binned results from felm (and maybe lm?). Will try to guess at omitted variable from variable names created using cut().}
 \usage{
-clean_binned_results(felm.est = NULL, felm.dt = NULL, keepvars = NULL)
+clean_binned_results(felm.est = NULL, felm.dt = NULL,
+  keepvars = NULL)
 }
 \arguments{
 \item{felm.est}{felm output from regression with binned variables, can be stripped with strip_felm. Required if felm.dt not supplied.}

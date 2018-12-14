@@ -4,9 +4,9 @@
 \alias{prism_daily_to_ym}
 \title{Takes in a data.table with daily weather data and produces aggregated data.table by month of sample using requested summary functions.}
 \usage{
-prism_daily_to_ym(dt, i.names, t.name = c("date"), mean.names = c("tmin"),
-  sum.names = c("ppt"), bins.seqs = list(tmax = c(-Inf, seq(0, 40, 10),
-  Inf), tmin = c(-Inf, seq(-10, 30, 10), Inf)))
+prism_daily_to_ym(dt, i.names, t.name = c("date"),
+  mean.names = c("tmin"), sum.names = c("ppt"), bins.seqs = list(tmax
+  = c(-Inf, seq(0, 40, 10), Inf), tmin = c(-Inf, seq(-10, 30, 10), Inf)))
 }
 \arguments{
 \item{dt}{data.table to summarize.}
