@@ -1,4 +1,4 @@
-# Not sure If I need any of this - can maybe just run "Clean and rebuild from Build"
+# Not sure If I need any of this - can maybe just run "Build -> Document, then Build -> Clean and Rebuild"
 
 library(devtools)
 library(roxygen2)
