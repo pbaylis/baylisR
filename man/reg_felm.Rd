@@ -2,26 +2,55 @@
 % Please edit documentation in R/reg_felm.R
 \name{reg_felm}
 \alias{reg_felm}
-\title{Wrapper for lfe::felm}
+\title{Run a regression and return the results in a tibble. Useful for running multiple regressions with purrr::pmap.
+All inputs are fed directly into as.formula, and should follow the relevant specifications.}
 \usage{
-reg_felm(lhs, rhs, fe, clus, data, weights_var)
+reg_felm(lhs, rhs, fe = "0", iv = "0", clus = "0", data_str,
+  tidy = FALSE)
 }
 \arguments{
-\item{lhs}{Character string of LHS, e.g., "y"}
+\item{lhs}{Character vector with left hand side variable.}
 
-\item{rhs}{Character string of RHS, e.g., "x1 + x2"}
+\item{rhs}{Character vector with right hand side variable(s).}
 
-\item{fe}{Character string of RHS, e.g., "fe1 + fe2"}
+\item{fe}{Character vector with fixed effects. Optional.}
 
-\item{clus}{Character string of clustering variables, e.g., "clus1 + clus2"}
+\item{iv}{Character vector with instruments. Optional.}
 
-\item{data}{Symbol for data.table with data in it}
+\item{clus}{Character vector of clustering variable(s). Optional.}
 
-\item{weights_var}{Character string for the weights_var (should be found in data)}
+\item{data_str}{String to be evaluated to produce dataset. Use single quotes inside double quotes to avoid need for escaping.}
+
+\item{tidy}{TRUE/FALSE. Return a tidied data.frame rather than a fitted felm object? Optional.}
 }
 \value{
-Stripped felm object.
+tibble with summary statistics and fitted output (felm or tidied data.frame).
 }
 \description{
-Wrapper for lfe::felm
+Run a regression and return the results in a tibble. Useful for running multiple regressions with purrr::pmap.
+All inputs are fed directly into as.formula, and should follow the relevant specifications.
+}
+\examples{
+# Load data
+data("Wages", package="plm")
+setDT(Wages)
+
+reg_tibble <- as_tibble(
+  expand.grid(lhs = "lwage", rhs = c("exp", "exp + wks"),
+              fe = "married", clus = "0", data_str = c("Wages", "Wages[bluecol == 'no']"),
+              stringsAsFactors = F))
+
+reg_output <- cbind(reg_tibble, purrr::pmap_dfr(reg_tibble, reg_felm))
+
+# Can also save regression output as a tidied data.frame
+reg_output_tidy <- cbind(reg_tibble, purrr::pmap_dfr(reg_tibble, reg_felm, tidy = T))
+
+# These can be used directly in stargazer or huxtable
+stargazer::stargazer(reg_output$fit)
+huxtable::huxreg(reg_output$fit)
+huxtable::huxreg(reg_output_tidy$fit_tidy)
+
+# Easy to select which regressions to display
+stargazer::stargazer(reg_output \%>\% filter(rhs == "exp + wks") \%>\% pull(fit))
+huxtable::huxreg(reg_output \%>\% filter(rhs == "exp + wks") \%>\% pull(fit))
 }
