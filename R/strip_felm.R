@@ -5,6 +5,7 @@
 strip_felm <- function(felm.est) {
   # Strip out all of the fatty bits from felm to save it.
   # Stargazer can still use the remainder.
+  # USEFUL FOR TESTING: as.matrix(lapply(lm.object, function(x) length(serialize(x,NULL))))
   felm.est$residuals <- NULL
   felm.est$weights <- NULL
   felm.est$response <- NULL
@@ -35,8 +36,10 @@ strip_felm <- function(felm.est) {
   felm.est$stage1$ivy <- NULL
   felm.est$stage1$r.residuals <- NULL
   felm.est$stage1$centred.exo <- NULL
-  attr(felm.est$terms, ".Environment") <- NULL
+  attr(felm.est$formula, ".Environment") <- NULL # Sneaky: can store a fatty environment (won't be detected by object.size)
+  attr(felm.est$terms, ".Environment") <- NULL # Sneaky: can store a fatty environment (won't be detected by object.size)
   return(felm.est)
 }
+
 
 
